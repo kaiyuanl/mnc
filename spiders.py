@@ -14,7 +14,7 @@ class IssueSpider:
 		self.url = url
 		
 
-	def GetIssues(self):
+	def GetNewIssues(self):
 		html = helper.GetHtmlText(self.url)
 		issueDivs = re.findall(self.patternDiv, html)
 		print(type(re.findall(self.patternDiv, html)))
@@ -36,6 +36,9 @@ class IssueSpider:
 			issue.date = spider.GetDate()
 
 		return newIssues
+
+	def GetIssues(self):
+		return self.GetNewIssues()
 
 
 class IssueContentSpider:
