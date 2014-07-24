@@ -12,3 +12,6 @@ class Connector:
 
 	def PushJobToDatabase(self, job):
 		pass
+
+	def HasIssuePushed(self, issue):
+		pass

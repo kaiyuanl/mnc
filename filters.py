@@ -1,3 +1,7 @@
+from data import *
+from globalvs import *
 
-def NewIssueFilter(issues):
+def new_issues_filter(issues):
+	
+
 	return issues
