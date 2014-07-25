@@ -1,22 +1,31 @@
-class Issue(object):
-	def __init__(self, number, title, year, month, day, url):
+
+import datetime
+
+class Issue:
+	posts = []
+	jobs = []
+
+	def __init__(self, number, title, url):
 		self.number = number
 		self.title = title
-		self.year = year
-		self.month = month
-		self.day = day
 		self.url = url
 
+	def set_date(date):
+		self.date = date
 
-class Item(object):
-	def __init__(self, number, category, title, titleUrl, subtitle, subtitleUrl):
-		self.number
-		self.category = category
-		self.title = title;
-		self.titleUrl = titleUrl
-		self.subtitle = subtitle
-		self.subtitleUrl = subtitleUrl
+	def add_post(post):
+		self.posts.append(post)
 
+	def add_job(job):
+		self.jobs.append(job)
 
 
+class Post:
+	def __init__(self, title, desc):
+		self.title = title
+		self.desc = desc
 
+class Job:
+	def __init__(self, company, position):
+		self.company = company
+		self.position = position
