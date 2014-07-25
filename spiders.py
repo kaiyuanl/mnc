@@ -1,5 +1,5 @@
 from helper import *
-from items import *
+from Items import *
 from filters import *
 import re
 import datetime
@@ -59,9 +59,9 @@ class IssueContentSpider:
 		for item_div in items_div:
 			if(is_item_job(item_div)):
 				company = re.search(self._pattern_company, item_div).group(1)
-				positions = re.findall(self._pattern_positions, re.search(self._pattern_positions_div))
+				positions = re.findall(self._pattern_positions, re.search(self._pattern_positions_div, item_div).group(1))
 				for position in positions:
-					title = position.group(1)
+					title = position
 					job = Job(company, title)
 					self._jobs.append(job)
 
@@ -79,10 +79,10 @@ class IssueContentSpider:
 			
 
 	def get_posts(self):
-		return None
+		return self._posts
 
 	def get_jobs(self):
-		pass
+		return self._jobs
 
 	def get_date(self):
 		match = re.search(self._pattern_issue_date, self.html)

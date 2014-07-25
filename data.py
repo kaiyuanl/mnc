@@ -1,4 +1,4 @@
-import items
+import Items
 
 class Connector:
 	def __init__(self, connString):
