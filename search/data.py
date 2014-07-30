@@ -1,17 +1,20 @@
-import Items
+import items
 
-class Connector:
+class DBConn:
 	def __init__(self, connString):
 		self.connString = connString
 
-	def PushIssueToDatabase(self, issue):
+	def push_daily_post(self, post):
 		pass
 
-	def PushPostToDatabase(self, post):
+	def push_weekly_post(self, post):
 		pass
 
-	def PushJobToDatabase(self, job):
+	def push_job(job):
 		pass
 
-	def HasIssuePushed(self, issue):
+	def get_last_issue(self):
+		pass
+
+	def get_daily_last_date(self):
 		pass
