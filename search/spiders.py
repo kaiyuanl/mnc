@@ -1,5 +1,5 @@
 from helper import *
-from Items import *
+from items import *
 from filters import *
 import re
 import datetime
@@ -47,13 +47,12 @@ class IssueContentSpider:
 	_pattern_desc = b'<p>(.*)</p>'
 
 
-	def __init__(self, issue, url):
+	def __init__(self, url):
 		self.url = url
-		self.issue = issue
 		self.html = get_html_content(self.url)
 
 
-	def get_items(self):
+	def fill_items(self):
 		items_div = re.findall(self._pattern_item_div, self.html)
 
 		for item_div in items_div:
@@ -90,4 +89,31 @@ class IssueContentSpider:
 		month = int(match.group(2))
 		day = int(match.group(3))
 		return datetime.date(year, month, day)
+
+class DailyContentSpider:
+	_posts = []
+
+	_pattern_post_div = b''
+	_pattern_posts = b''
+	_pattern_title = b''
+	_pattern_src = b''
+
+	def __init__(self, url):
+		self.url = url
+		self.html = get_html_content(self.url)
+
+	def fill_items(self):
+		posts_div = re.search(self._pattern_post_div, self.html)
+		posts = re.findall(self._pattern_posts, post_div)
+		for post in posts:
+			title = re.search(self._pattern_title, post)
+			src = re.search(self._pattern_src, post)
+			post = DailyPost(title, src)
+			self._posts.append(post)
+
+
+	def get_posts(self):
+		return self._posts
+
+
 
