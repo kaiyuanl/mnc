@@ -1,6 +1,5 @@
-from spider import *
+from spiders import *
 from helper import *
-from globalvs import *
 
 curr_date = get_current_date()
 last_update_date = get_daily_last_update_date()
@@ -17,7 +16,7 @@ for date_ in dates:
         spider.fill_items()
         posts = spider.get_posts()
         for post in posts:
-            push_daily_post()
+            push_daily_post(post)
 
 
 

@@ -20,8 +20,16 @@ def test_gen_daily_url():
 	for date_ in dates:
 		print helper.gen_daily_url(date_.year, date_.month, date_.day)
 
+def test_daily_content_spider():
+	spider = spiders.DailyContentSpider('http://daily.manong.io/2014-07-29')
+	spider.fill_items()
+	posts = spider.get_posts()
+	helper.display_posts(posts)
+
 #test_get_main_page_url()
 
 #test_issue_content_spider()
 
-test_gen_daily_url()
+#test_gen_daily_url()
+
+test_daily_content_spider()
