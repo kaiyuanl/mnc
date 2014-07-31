@@ -55,7 +55,7 @@ def gen_daily_url(year, month, day):
     return "http://daily.manong.io/%04d-%02d-%02d"%(year, month, day)
 
 def gen_weekly_url(issue):
-    return "http://weekly.manong.io/issue/%s"%(issue)
+    return "http://weekly.manong.io/issues/%s"%(issue)
 
 def test_url_valid(url):
     result = None

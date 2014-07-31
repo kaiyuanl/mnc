@@ -25,10 +25,6 @@ class Post:
         self.title = title
         self.desc = desc
 
-    def __init__(self, title, desc, src):
-        self.title = title
-        self.desc = desc
-        self.src = src
 
 class DailyPost:
     def __init__(self, title, src):

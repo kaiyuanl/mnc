@@ -74,7 +74,6 @@ class DailyContentSpider:
 		for post in posts:
 			title = re.search(self._pattern_title, post).group(1)
 			src = re.search(self._pattern_src, post).group(1)
-			print title, src
 			post = DailyPost(title, src)
 			self._posts.append(post)
 

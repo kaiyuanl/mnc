@@ -5,6 +5,7 @@ curr_date = get_current_date()
 last_update_date = get_daily_last_update_date()
 dates = get_days_between_dates(last_update_date, curr_date)
 
+#'get daily content'
 for date_ in dates:
     year = date_.year
     month = date_.month
@@ -19,7 +20,7 @@ for date_ in dates:
             push_daily_post(post)
 
 
-
+#'get issue content'
 last_issue = get_last_issue()
 new_issue = last_issue + 1
 weekly_url = gen_weekly_url(new_issue)
