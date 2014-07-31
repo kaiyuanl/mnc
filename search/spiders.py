@@ -4,47 +4,17 @@ from filters import *
 import re
 import datetime
 
-class IssueSpider:
-	_pattern_div = b'\<div class=\"issue\">[\s\S]+?\</div>'
-	_pattern_url = b'\<a href=\"(.*)\"\>'
-	_pattern_issue_number = b'issues/(\d+)'
-	_pattern_title = b'\<p>(.+)\</p\>'
-
-	def __init__(self, url):
-		self.url = url
-		
-
-	def get_new_issues(self):
-		html = get_html_content(self.url)
-		issue_divs = re.findall(self._pattern_div, html)
-
-		all_issues = []
-
-		for issue_div in issue_divs:
-			url = re.search(self._pattern_url, issue_div).group(1)
-			issue_number = re.search(self._pattern_issue_number, url).group(1)
-			title = re.search(self._pattern_title, issue_div).group(1)
-			all_issues.append(Issue(issue_number, title, url))
-
-		new_issues = new_issues_filter(all_issues)
-
-		return new_issues
-
-	def get_issues(self):
-		return self.get_new_issues()
-
-
 class IssueContentSpider:
 	_posts = []
 	_jobs = []
 
-	_pattern_issue_date = b'\<body class="issue"\>[\s\S]*?\<h2\>.+(\d{4})-(\d{2})-(\d{2})'
-	_pattern_item_div = b'<h4>[\s\S]*?</h4>[\s\S]*?<p>[\s\S]*?</p>'
-	_pattern_company = b'<h4>.+?>(.+)</a>'
-	_pattern_positions_div = b'<p>(.+)</p>'
-	_pattern_positions = b'<a.+?>(.+?)</a>'
-	_pattern_title = b'<h4><a.+?>(.+?)</a>'
-	_pattern_desc = b'<p>(.*)</p>'
+	_pattern_issue_date = r'\<body class="issue"\>[\s\S]*?\<h2\>.+(\d{4})-(\d{2})-(\d{2})'
+	_pattern_item_div = r'<h4>[\s\S]*?</h4>[\s\S]*?<p>[\s\S]*?</p>'
+	_pattern_company = r'<h4>.+?>(.+)</a>'
+	_pattern_positions_div = r'<p>(.+)</p>'
+	_pattern_positions = r'<a.+?>(.+?)</a>'
+	_pattern_title = r'<h4><a.+?>(.+?)</a>'
+	_pattern_desc = r'<p>(.*)</p>'
 
 
 	def __init__(self, url):
@@ -73,10 +43,6 @@ class IssueContentSpider:
 			else:
 				pass
 
-
-
-			
-
 	def get_posts(self):
 		return self._posts
 
@@ -93,24 +59,24 @@ class IssueContentSpider:
 class DailyContentSpider:
 	_posts = []
 
-	_pattern_post_div = b''
-	_pattern_posts = b''
-	_pattern_title = b''
-	_pattern_src = b''
+	_pattern_post_div = r'<div class="post">([\s\S]+?)</div>'
+	_pattern_posts = r'<li>[\s\S]+?</li>'
+	_pattern_title = r'<a.+?>(.+)</a>'
+	_pattern_src = r'\((.+)\)'
 
 	def __init__(self, url):
 		self.url = url
 		self.html = get_html_content(self.url)
 
 	def fill_items(self):
-		posts_div = re.search(self._pattern_post_div, self.html)
-		posts = re.findall(self._pattern_posts, post_div)
+		posts_div = re.search(self._pattern_post_div, self.html).group(1)
+		posts = re.findall(self._pattern_posts, posts_div)
 		for post in posts:
-			title = re.search(self._pattern_title, post)
-			src = re.search(self._pattern_src, post)
+			title = re.search(self._pattern_title, post).group(1)
+			src = re.search(self._pattern_src, post).group(1)
+			print title, src
 			post = DailyPost(title, src)
 			self._posts.append(post)
-
 
 	def get_posts(self):
 		return self._posts
