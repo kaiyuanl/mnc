@@ -81,3 +81,6 @@ def push_weekly_post(post):
 
 def push_job(job):
     conn.push_job(job)
+
+def push_new_issue(issue, pub_date):
+    conn.push_new_issue(issue, pub_date)

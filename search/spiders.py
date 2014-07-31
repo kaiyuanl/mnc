@@ -5,9 +5,6 @@ import re
 import datetime
 
 class IssueContentSpider:
-	_posts = []
-	_jobs = []
-
 	_pattern_issue_date = r'\<body class="issue"\>[\s\S]*?\<h2\>.+(\d{4})-(\d{2})-(\d{2})'
 	_pattern_item_div = r'<h4>[\s\S]*?</h4>[\s\S]*?<p>[\s\S]*?</p>'
 	_pattern_company = r'<h4>.+?>(.+)</a>'
@@ -17,8 +14,11 @@ class IssueContentSpider:
 	_pattern_desc = r'<p>(.*)</p>'
 
 
-	def __init__(self, url):
+	def __init__(self, url, issue):
+		self._posts = []
+		self._jobs = []
 		self.url = url
+		self.issue = issue
 		self.html = get_html_content(self.url)
 
 
@@ -31,13 +31,13 @@ class IssueContentSpider:
 				positions = re.findall(self._pattern_positions, re.search(self._pattern_positions_div, item_div).group(1))
 				for position in positions:
 					title = position
-					job = Job(company, title)
+					job = Job(self.issue, company, title)
 					self._jobs.append(job)
 
 			elif(is_item_post(item_div)):
 				title = re.search(self._pattern_title, item_div).group(1)
 				desc = re.search(self._pattern_desc, item_div).group(1)
-				post = Post(title, desc)
+				post = Post(self.issue, title, desc)
 				self._posts.append(post)
 
 			else:
@@ -57,15 +57,15 @@ class IssueContentSpider:
 		return datetime.date(year, month, day)
 
 class DailyContentSpider:
-	_posts = []
-
 	_pattern_post_div = r'<div class="post">([\s\S]+?)</div>'
 	_pattern_posts = r'<li>[\s\S]+?</li>'
 	_pattern_title = r'<a.+?>(.+)</a>'
 	_pattern_src = r'\((.+)\)'
 
-	def __init__(self, url):
+	def __init__(self, url, pub_date):
+		self._posts = []
 		self.url = url
+		self.pub_date = pub_date
 		self.html = get_html_content(self.url)
 
 	def fill_items(self):
@@ -74,7 +74,7 @@ class DailyContentSpider:
 		for post in posts:
 			title = re.search(self._pattern_title, post).group(1)
 			src = re.search(self._pattern_src, post).group(1)
-			post = DailyPost(title, src)
+			post = DailyPost(title, src, self.pub_date)
 			self._posts.append(post)
 
 	def get_posts(self):

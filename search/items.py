@@ -21,17 +21,20 @@ class Issue:
 
 
 class Post:
-    def __init__(self, title, desc):
+    def __init__(self, issue, title, desc):
+        self.issue = issue
         self.title = title
         self.desc = desc
 
 
 class DailyPost:
-    def __init__(self, title, src):
+    def __init__(self, title, src, pub_date):
         self.title = title
         self.src = src
+        self.pub_date = pub_date
 
 class Job:
-    def __init__(self, company, position):
+    def __init__(self, issue, company, position):
+        self.issue = issue
         self.company = company
         self.position = position
