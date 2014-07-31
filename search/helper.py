@@ -5,63 +5,65 @@ import io
 import datetime
 import httplib
 import urlparse
+import data
 
 config = ConfigParser.ConfigParser(allow_no_value = True)
 config.read('.config')
+conn = data.DBConn("")
 
 def get_html_content(url):
-	response = urlopen(url)
-	return response.read()
+    response = urlopen(url)
+    html = response.read()
+    return html
 
 def get_main_page_url():
-	return config.get('targeturl','MainPageUrl')
+    return config.get('targeturl','MainPageUrl')
 
 def get_database_connection_string():
-	pass
+    pass
 
 def is_item_job(item_div):
-	return 'job.manong.io' in item_div
+    return 'job.manong.io' in item_div
 
 def is_item_post(item_div):
-	return True
+    return True
 
 def display_posts(posts):
-	for post in posts:
-		print '-------------'
-		print post.title
-		print post.desc
+    for post in posts:
+        print '-------------'
+        print post.title
 
 def display_jobs(jobs):
-	for job in jobs:
-		print '-------------'
-		print job.company
-		print job.position
+    for job in jobs:
+        print '-------------'
+        print job.company
+        print job.position
 
 def get_current_date():
-	return datetime.date.today()
+    return datetime.date.today()
 
 def get_daily_last_update_date():
-	#return a test date value
-	return datetime.date(2014, 7, 1)
+    #return a test date value
+    return conn.get_daily_last_update_date()
 
 def get_days_between_dates(start_date, end_date):
-	diff = end_date - start_date
-	for i in range(diff.days + 1):
-		yield start_date + datetime.timedelta(i)
+    diff = end_date - start_date
+    for i in range(diff.days + 1):
+        yield start_date + datetime.timedelta(i)
 
 def gen_daily_url(year, month, day):
-	return "http://daily.manong.io/%04d-%02d-%02d"%(year, month, day)
+    return "http://daily.manong.io/%04d-%02d-%02d"%(year, month, day)
 
 def gen_weekly_url(issue):
-	return "http://weekly.manong.io/issue/%s"%(issue)
+    return "http://weekly.manong.io/issue/%s"%(issue)
 
 def test_url_valid(url):
-	result = None
-	host, path = urlparse.urlparse(url)[1:3]
+    result = None
+    host, path = urlparse.urlparse(url)[1:3]
     try:
-        conn = httplib.HTTPConnection(host)
-        conn.request('HEAD', path)
-        result = conn.getresponse().status
+        httpconn = httplib.HTTPConnection(host)
+        httpconn.request('HEAD', path)
+        result = httpconn.getresponse().status
     except StandardError:
         pass
 
@@ -69,5 +71,13 @@ def test_url_valid(url):
     return result in good_codes
 
 def get_last_issue():
-	return 38
+    return conn.get_last_issue()
 
+def push_daily_post(post):
+    conn.push_daily_post(post)
+
+def push_weekly_post(post):
+    conn.push_weekly_post(post)
+
+def push_job(job):
+    conn.push_job(job)
