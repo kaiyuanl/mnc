@@ -3,6 +3,7 @@ from helper import *
 
 curr_date = get_current_date()
 last_update_date = get_daily_last_update_date()
+print curr_date, type(curr_date), last_update_date, type(last_update_date)
 dates = get_days_between_dates(last_update_date, curr_date)
 
 #'get daily content'
@@ -18,6 +19,7 @@ for date_ in dates:
         posts = spider.get_posts()
         for post in posts:
             push_daily_post(post)
+            print 'push daily post', post
 
 
 #'get issue content'
@@ -31,13 +33,17 @@ for new_issue in range(begin_issue, begin_issue + 10):
         spider.fill_items()
         posts = spider.get_posts()
         jobs = spider.get_jobs()
+        issue_title = spider.get_title()
         pub_date = spider.get_date()
-        push_new_issue(new_issue, pub_date)
+        push_new_issue(new_issue, title,  pub_date)
+        print 'push issue', issue
 
         for post in posts:
             push_weekly_post(post)
+            print 'push weekly post', post
             pass
 
         for job in jobs:
             push_job(job)
+            print 'push job', job
             pass

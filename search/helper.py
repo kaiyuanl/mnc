@@ -9,7 +9,13 @@ import data
 
 config = ConfigParser.ConfigParser(allow_no_value = True)
 config.read('.config')
-conn = data.DBConn("")
+
+user = config.get('dbconnstr', 'User')
+pwd = config.get('dbconnstr', 'Password')
+host = config.get('dbconnstr', 'Host')
+db = config.get('dbconnstr', 'Database')
+
+conn = data.DBConn(user, pwd, host, db)
 
 def get_html_content(url):
     response = urlopen(url)
@@ -48,6 +54,7 @@ def get_daily_last_update_date():
 
 def get_days_between_dates(start_date, end_date):
     diff = end_date - start_date
+    print diff
     for i in range(diff.days + 1):
         yield start_date + datetime.timedelta(i)
 
@@ -82,5 +89,5 @@ def push_weekly_post(post):
 def push_job(job):
     conn.push_job(job)
 
-def push_new_issue(issue, pub_date):
-    conn.push_new_issue(issue, pub_date)
+def push_new_issue(issue, title, pub_date):
+    conn.push_new_issue(issue, title, pub_date)

@@ -5,6 +5,7 @@ import re
 import datetime
 
 class IssueContentSpider:
+	_pattern_issue_title = r'<title>(.+?)</title>'
 	_pattern_issue_date = r'\<body class="issue"\>[\s\S]*?\<h2\>.+(\d{4})-(\d{2})-(\d{2})'
 	_pattern_item_div = r'<h4>[\s\S]*?</h4>[\s\S]*?<p>[\s\S]*?</p>'
 	_pattern_company = r'<h4>.+?>(.+)</a>'
@@ -56,6 +57,11 @@ class IssueContentSpider:
 		day = int(match.group(3))
 		return datetime.date(year, month, day)
 
+	def get_title(self):
+		title = re.search(self._pattern_issue_title, self.html).group(1)
+		return title
+
+
 class DailyContentSpider:
 	_pattern_post_div = r'<div class="post">([\s\S]+?)</div>'
 	_pattern_posts = r'<li>[\s\S]+?</li>'
@@ -72,10 +78,13 @@ class DailyContentSpider:
 		posts_div = re.search(self._pattern_post_div, self.html).group(1)
 		posts = re.findall(self._pattern_posts, posts_div)
 		for post in posts:
-			title = re.search(self._pattern_title, post).group(1)
-			src = re.search(self._pattern_src, post).group(1)
-			post = DailyPost(title, src, self.pub_date)
-			self._posts.append(post)
+			try:
+				title = re.search(self._pattern_title, post).group(1)
+				src = re.search(self._pattern_src, post).group(1)
+				post = DailyPost(title, src, self.pub_date)
+				self._posts.append(post)
+			except AttributeError:
+				print AttributeError, post
 
 	def get_posts(self):
 		return self._posts
