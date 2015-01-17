@@ -17,19 +17,10 @@ class WeeklyItem:
         self.desc = desc
 
     def __str__(self):
-        text = \
-'''********
-head : {}
-origin : {}
-origin_link : {}
-desc : {}
-********'''.format(
-    self.head,
-    self.origin,
-    self.origin_link,
-    self.desc
-    )
-        return text
+        return u'weekly item\nhead: ' + self.head
+
+    def get_head(self):
+        return self.head
 
 #Testing for class Weekly
 if __name__ == '__main__':
