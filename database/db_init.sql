@@ -18,7 +18,7 @@ CREATE TABLE WeeklyPost
     ID MEDIUMINT not null AUTO_INCREMENT,
     Issue int not null,
     Title varchar(200) not null,
-    Origin varchar(200) null
+    Origin varchar(200) null,
     Link varchar(300) null,
     PRIMARY KEY(ID),
     FOREIGN KEY(Issue) REFERENCES Issue(Num)
