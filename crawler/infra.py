@@ -1,6 +1,8 @@
 import os, platform, logging
 import urllib
+import urllib2
 import httplib
+import urlparse
 import sys
 
 #Logging relevant code
@@ -23,6 +25,9 @@ logger = logging.getLogger('test_logger')
 def print_u(str):
     print str.encode('utf-8', 'ignore')
 
+def gen_weekly_url(issue):
+    return "http://weekly.manong.io/issues/%s"%(issue)
+
 def get_html_content(url):
     '''return unicode'''
     response = urllib.urlopen(url)
@@ -31,6 +36,25 @@ def get_html_content(url):
 
 def is_item_job(item_content):
     return 'job.manong.io' in item_content
+
+def test_url_valid(url):
+    result = None
+    host, path = urlparse.urlparse(url)[1:3]
+    try:
+        httpconn = httplib.HTTPConnection(host)
+        httpconn.request('HEAD', path)
+        result = httpconn.getresponse().status
+    except StandardError:
+        pass
+
+    good_codes = [httplib.OK, httplib.FOUND, httplib.MOVED_PERMANENTLY]
+    return result in good_codes
+
+def get_redir_url(url):
+    req = urllib2.Request(url)
+    opr = urllib2.build_opener()
+    f = opr.open(req)
+    return url
 
 
 if __name__ == '__main__':

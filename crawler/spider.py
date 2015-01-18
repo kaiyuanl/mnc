@@ -21,17 +21,13 @@ class WeeklySpider:
 
         self.items = []
 
-    def __str__(self):
-        print '********'
-        print 'weekly title: %s issue: %d'%(self.title, self.issue)
-
-    def get_content(self):
+    def gen_content(self):
         '''Return tuple (issue, title, pub_date, items)'''
         html = infra.get_html_content(self.url)
         soup = BeautifulSoup(html)
 
-        self.title = soup.title.name
-
+        self.title = unicode(soup.title.next_element)
+        infra.print_u(self.title)
         #get publish date of weekly issue
         h2 = soup.h2.string
         matched_date = self._re_weekly_date.search(h2)
@@ -47,11 +43,15 @@ class WeeklySpider:
             #get item's  head, link, and origin if exists
             #print raw_item
             head = raw_item.next_element.next_element
-            #infra.print_u(head)
+            infra.print_u(head)
             link = raw_item.a['href']
             #infra.print_u(link)
             if infra.is_item_job(link):
                 continue
+
+            #infra.print_u(link)
+            #link = infra.get_redir_url(link)
+            #infra.print_u(link)
 
             origin = None
             matched_origin = self._re_origin.search(head)
@@ -59,34 +59,20 @@ class WeeklySpider:
                 origin = matched_origin.group(1)
                 #infra.print_u(origin)
 
-            #get item's desc
-            desc = raw_item.next_sibling.next_sibling.next_element
-            #infra.print_u(desc)
+            new_item = item.WeeklyItem(unicode(head),
+                unicode(origin),
+                unicode(link))
 
-            new_item = item.WeeklyItem(head,
-                origin,
-                link,
-                desc)
+            infra.print_u(new_item.head)
 
-            v = new_item.get_head()
-            infra.print_u(v)
-            self.items.append(item)
-
-    def get_items(self):
-        return self.items
-
-    def get_title(self):
-        return self.title
-
-    def get_pub_date(self):
-        return self.pub_date
+            self.items.append(new_item)
 
 if __name__ == '__main__':
     spider = WeeklySpider(58, 'http://weekly.manong.io/issues/58')
-    spider.get_content()
-    items = spider.get_content()
+    spider.gen_content()
+    items = spider.items
     for i in items:
-        infra.print_u(i.head)
+        infra.print_u(i.link)
 
 
 

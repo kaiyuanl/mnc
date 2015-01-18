@@ -8,13 +8,11 @@ class WeeklyItem:
     def __init__(self,
         head,
         origin,
-        origin_link,
-        desc):
+        link):
 
         self.head = head
         self.origin = origin
-        self.origin_link = origin_link
-        self.desc = desc
+        self.link = link
 
     def __str__(self):
         return u'weekly item\nhead: ' + self.head
@@ -25,5 +23,5 @@ class WeeklyItem:
 #Testing for class Weekly
 if __name__ == '__main__':
     weekly_item = WeeklyItem('head',
-        'origin', 'origin_link', 'desc')
+        'origin', 'origin_link')
     print weekly_item
